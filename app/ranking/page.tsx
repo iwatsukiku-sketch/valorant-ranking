@@ -146,6 +146,15 @@ export default function RankingPage() {
         )[0]
       : null;
 
+  /** 名前の長さに応じて文字サイズを段階的に落とす（表彰台のみ） */
+  function nameSizeClass(name: string): string {
+    const n = name.length;
+    if (n <= 4) return "nm-s1";
+    if (n <= 6) return "nm-s2";
+    if (n <= 9) return "nm-s3";
+    return "nm-s4";
+  }
+
   function podium(i: number) {
     const r = top[i];
     const cls = `pod p${i + 1}${r ? "" : " empty"}${
@@ -156,7 +165,9 @@ export default function RankingPage() {
         {i < 3 && <Crown />}
         <div className="no">{i + 1}</div>
         <div className="body">
-          <div className="namebox">{r ? r.nickname : "—"}</div>
+          <div className={`namebox ${nameSizeClass(r ? r.nickname : "—")}`}>
+            {r ? r.nickname : "—"}
+          </div>
           <div className="timerow">
             <Clock color={i === 0 ? "#8a6206" : i === 1 ? "#4a5158" : "#8a3a08"} />
             <div className={`timebox${r && !r.finished ? " dnf" : ""}`}>

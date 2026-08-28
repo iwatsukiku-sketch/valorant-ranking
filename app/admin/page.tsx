@@ -14,6 +14,7 @@ type Row = {
   time_sec: number | string | null;
   kills: number | null;
   pc_no: string | null;
+  note: string | null;
   created_at: string;
 };
 
@@ -71,6 +72,7 @@ export default function AdminPage() {
       finished: editing.finished,
       time_sec: editing.finished ? Number(editing.time_sec) : null,
       kills: editing.finished ? null : Number(editing.kills),
+      note: editing.note,
     };
     const res = await fetch(`/api/records/${editing.id}`, {
       method: "PATCH",
@@ -205,6 +207,17 @@ export default function AdminPage() {
             )}
           </div>
 
+          <div className="field">
+            <label className="label">備考（任意）</label>
+            <textarea
+              className="input"
+              style={{ height: 110, padding: 12, lineHeight: 1.5, resize: "vertical" }}
+              value={editing.note ?? ""}
+              maxLength={300}
+              onChange={(e) => setEditing({ ...editing, note: e.target.value })}
+            />
+          </div>
+
           <div className="row">
             <button className="btn" onClick={save}>
               保存する
@@ -226,6 +239,7 @@ export default function AdminPage() {
               <th>記録</th>
               <th>PC</th>
               <th>時刻</th>
+              <th>備考</th>
               <th></th>
             </tr>
           </thead>
@@ -242,6 +256,16 @@ export default function AdminPage() {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
+                </td>
+                <td
+                  style={{
+                    maxWidth: 220,
+                    whiteSpace: "pre-wrap",
+                    wordBreak: "break-word",
+                    color: r.note ? "var(--text)" : "var(--text-dim)",
+                  }}
+                >
+                  {r.note || "—"}
                 </td>
                 <td>
                   <div className="row">
@@ -265,7 +289,7 @@ export default function AdminPage() {
             ))}
             {ordered.length === 0 && (
               <tr>
-                <td colSpan={7} style={{ color: "var(--text-dim)", padding: 24 }}>
+                <td colSpan={8} style={{ color: "var(--text-dim)", padding: 24 }}>
                   まだ記録がありません
                 </td>
               </tr>

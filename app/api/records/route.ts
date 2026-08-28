@@ -10,8 +10,11 @@ function isStaff(req: Request): boolean {
   return cookie.split(";").some((c) => c.trim() === `staff=${token}`);
 }
 
-/** 一覧取得。ランキング表示から呼ぶので認証なしで読める。 */
-export async function GET() {
+/**
+ * 一覧取得。ランキング表示から呼ぶので認証なしで読める。
+ * ただし備考（本名・連絡先・住所などが入りうる）はスタッフにしか返さない。
+ */
+export async function GET(req: Request) {
   try {
     const sql = sqlClient();
     const rows = (await sql`
@@ -19,7 +22,9 @@ export async function GET() {
       FROM records
       ORDER BY created_at ASC, id ASC
     `) as unknown as RecordRow[];
-    return NextResponse.json({ rows });
+    const staff = isStaff(req);
+    const safe = staff ? rows : rows.map((r) => ({ ...r, note: null }));
+    return NextResponse.json({ rows: safe });
   } catch (e) {
     const message = e instanceof Error ? e.message : "取得に失敗しました";
     return NextResponse.json({ error: message, rows: [] }, { status: 500 });
@@ -86,7 +91,7 @@ export async function POST(req: Request) {
     const rows = (await sql`
       INSERT INTO records (nickname, division, finished, time_sec, kills, pc_no, note)
       VALUES (${nickname}, ${division}, ${finished}, ${time_sec}, ${kills},
-              ${body.pc_no ?? null}, ${body.note ?? null})
+              ${body.pc_no ?? null}, ${(body.note ?? "").toString().trim().slice(0, 300) || null})
       RETURNING id, nickname, division, finished, time_sec, kills, pc_no, note, created_at
     `) as unknown as RecordRow[];
     return NextResponse.json({ row: rows[0] });

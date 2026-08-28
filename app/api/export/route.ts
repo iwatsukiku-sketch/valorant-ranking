@@ -33,6 +33,7 @@ export async function GET(req: Request) {
     "記録表示",
     "PC番号",
     "登録時刻",
+    "備考（連絡先・氏名など）",
   ];
 
   const lines: string[] = [header.join(",")];
@@ -50,6 +51,7 @@ export async function GET(req: Request) {
           displayRecord(r),
           r.pc_no ?? "",
           new Date(r.created_at).toLocaleString("ja-JP"),
+          r.note ?? "",
         ]
           .map((v) => {
             const s = String(v);

@@ -29,8 +29,10 @@ export async function PATCH(req: Request, ctx: Ctx) {
     finished?: boolean;
     time_sec?: number | null;
     kills?: number | null;
+    note?: string | null;
   };
 
+  const note = (body.note ?? "").toString().trim().slice(0, 300) || null;
   const nickname = (body.nickname || "").trim();
   const division = (body.division || "").trim();
   const finished = body.finished === true;
@@ -66,7 +68,8 @@ export async function PATCH(req: Request, ctx: Ctx) {
              division = ${division},
              finished = ${finished},
              time_sec = ${time_sec},
-             kills    = ${kills}
+             kills    = ${kills},
+             note     = ${note}
        WHERE id = ${rid}
       RETURNING id, nickname, division, finished, time_sec, kills, pc_no, note, created_at
     `) as unknown as RecordRow[];

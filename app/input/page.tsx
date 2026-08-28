@@ -17,6 +17,7 @@ type Payload = {
   time_sec: number | null;
   kills: number | null;
   pc_no: string | null;
+  note: string | null;
 };
 
 type Recent = {
@@ -50,6 +51,7 @@ export default function InputPage() {
   const [min, setMin] = useState<number>(0);
   const [sec, setSec] = useState("");
   const [kills, setKills] = useState("");
+  const [note, setNote] = useState("");
 
   const [msg, setMsg] = useState<{ kind: "ok" | "err" | "warn"; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
@@ -109,6 +111,7 @@ export default function InputPage() {
     setMin(0);
     setSec("");
     setKills("");
+    setNote("");
     // 部門は続けて同じことが多いので残す
   }
 
@@ -132,6 +135,7 @@ export default function InputPage() {
           time_sec: total,
           kills: null,
           pc_no: pcNo || null,
+          note: note.trim() || null,
         },
       };
     }
@@ -148,6 +152,7 @@ export default function InputPage() {
         time_sec: null,
         kills: k,
         pc_no: pcNo || null,
+        note: note.trim() || null,
       },
     };
   }
@@ -309,7 +314,7 @@ export default function InputPage() {
           <div className="field">
             <span className="label">クリアタイム</span>
             <div className="choices" style={{ marginBottom: 8 }}>
-              {[0, 1, 2].map((m) => (
+              {[0, 1, 2, 3].map((m) => (
                 <button
                   key={m}
                   type="button"
@@ -355,6 +360,25 @@ export default function InputPage() {
             <p className="hint">0〜{TARGET_KILLS} の整数で入れてください</p>
           </div>
         )}
+
+        <div className="field">
+          <label className="label" htmlFor="note">
+            備考（任意）
+          </label>
+          <textarea
+            id="note"
+            className="input"
+            style={{ height: 110, padding: 12, lineHeight: 1.5, resize: "vertical" }}
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            maxLength={300}
+            placeholder={"景品の連絡先など\n例：山田太郎／090-0000-0000"}
+          />
+          <p className="hint">
+            入賞者の連絡先・お名前・ご住所など。記入は任意です。ここに書いた内容は
+            会場のランキング画面には出ません（スタッフの管理画面とCSVのみ）。300文字まで。
+          </p>
+        </div>
 
         <button className="btn" type="submit" disabled={busy}>
           {busy ? "送信中…" : "登録する"}

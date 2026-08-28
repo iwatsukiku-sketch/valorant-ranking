@@ -469,14 +469,72 @@ a {
   align-items: center;
   justify-content: center;
   padding: 0 14px;
-  font-size: 38px;
+  position: relative;
   font-weight: 900;
-  color: #14161a;
-  background: #fff;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  color: #fff;
+  background: transparent;
   border-radius: 6px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  /* 縁取り（黒アウトライン）＋落ち影。順位ごとの発光は下で足す */
+  text-shadow:
+    -2px 0 0 #0d1016, 2px 0 0 #0d1016, 0 -2px 0 #0d1016, 0 2px 0 #0d1016,
+    -2px -2px 0 #0d1016, 2px -2px 0 #0d1016, -2px 2px 0 #0d1016, 2px 2px 0 #0d1016,
+    0 5px 10px rgba(0, 0, 0, 0.75);
+}
+
+/* 名前の下の飾り罫 */
+.pod .namebox::after {
+  content: "";
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  bottom: 5px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+  opacity: 0.7;
+}
+
+.pod.empty .namebox::after {
+  opacity: 0.18;
+}
+
+/* 名前の長さで段階的に縮める（1〜3位） */
+.pod .namebox.nm-s1 { font-size: 52px; }
+.pod .namebox.nm-s2 { font-size: 40px; }
+.pod .namebox.nm-s3 { font-size: 28px; }
+.pod .namebox.nm-s4 { font-size: 22px; }
+
+/* 順位ごとの発光 */
+.pod.p1 .namebox {
+  text-shadow:
+    -2px 0 0 #0d1016, 2px 0 0 #0d1016, 0 -2px 0 #0d1016, 0 2px 0 #0d1016,
+    -2px -2px 0 #0d1016, 2px -2px 0 #0d1016, -2px 2px 0 #0d1016, 2px 2px 0 #0d1016,
+    0 5px 10px rgba(0, 0, 0, 0.75), 0 0 24px rgba(255, 214, 92, 0.9);
+}
+.pod.p2 .namebox {
+  text-shadow:
+    -2px 0 0 #0d1016, 2px 0 0 #0d1016, 0 -2px 0 #0d1016, 0 2px 0 #0d1016,
+    -2px -2px 0 #0d1016, 2px -2px 0 #0d1016, -2px 2px 0 #0d1016, 2px 2px 0 #0d1016,
+    0 5px 10px rgba(0, 0, 0, 0.75), 0 0 22px rgba(226, 238, 248, 0.85);
+}
+.pod.p3 .namebox {
+  text-shadow:
+    -2px 0 0 #0d1016, 2px 0 0 #0d1016, 0 -2px 0 #0d1016, 0 2px 0 #0d1016,
+    -2px -2px 0 #0d1016, 2px -2px 0 #0d1016, -2px 2px 0 #0d1016, 2px 2px 0 #0d1016,
+    0 5px 10px rgba(0, 0, 0, 0.75), 0 0 22px rgba(255, 168, 88, 0.85);
+}
+.pod.p4 .namebox,
+.pod.p5 .namebox {
+  text-shadow:
+    -2px 0 0 #0d1016, 2px 0 0 #0d1016, 0 -2px 0 #0d1016, 0 2px 0 #0d1016,
+    -2px -2px 0 #0d1016, 2px -2px 0 #0d1016, -2px 2px 0 #0d1016, 2px 2px 0 #0d1016,
+    0 5px 10px rgba(0, 0, 0, 0.75), 0 0 20px rgba(255, 150, 140, 0.8);
 }
 
 .pod .timerow {
@@ -500,14 +558,15 @@ a {
   font-size: 36px;
   font-weight: 900;
   font-variant-numeric: tabular-nums;
-  color: #14161a;
-  background: #f7f4ec;
+  color: #fff;
+  background: transparent;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85), 0 0 3px rgba(0, 0, 0, 0.9);
   border-radius: 6px;
 }
 
 .pod .timebox.dnf {
   font-size: 30px;
-  color: #6a2a24;
+  color: #ffd2c9;
 }
 
 /* 1位 */
@@ -551,8 +610,15 @@ a {
 .pod.p4 .namebox,
 .pod.p5 .namebox {
   height: 78px;
-  font-size: 30px;
 }
+.pod.p4 .namebox.nm-s1,
+.pod.p5 .namebox.nm-s1 { font-size: 36px; }
+.pod.p4 .namebox.nm-s2,
+.pod.p5 .namebox.nm-s2 { font-size: 26px; }
+.pod.p4 .namebox.nm-s3,
+.pod.p5 .namebox.nm-s3 { font-size: 20px; }
+.pod.p4 .namebox.nm-s4,
+.pod.p5 .namebox.nm-s4 { font-size: 16px; }
 .pod.p4 .timebox,
 .pod.p5 .timebox {
   height: 58px;
@@ -566,8 +632,8 @@ a {
 
 .pod.empty .namebox,
 .pod.empty .timebox {
-  background: rgba(255, 255, 255, 0.14);
-  color: rgba(255, 255, 255, 0.32);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.3);
 }
 
 /* ---------- 6〜20位テーブル ---------- */
@@ -631,8 +697,9 @@ a {
   padding: 0 18px;
   font-size: 30px;
   font-weight: 800;
-  color: #14161a;
-  background: #fff;
+  color: #fff;
+  background: transparent;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85), 0 0 3px rgba(0, 0, 0, 0.9);
   border-radius: 4px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -649,8 +716,9 @@ a {
   font-size: 28px;
   font-weight: 900;
   font-variant-numeric: tabular-nums;
-  color: #14161a;
-  background: #fff;
+  color: #fff;
+  background: transparent;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85), 0 0 3px rgba(0, 0, 0, 0.9);
   border-radius: 4px;
 }
 
@@ -662,8 +730,8 @@ a {
 
 .tbl-row.empty .nm,
 .tbl-row.empty .tm {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.3);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.28);
 }
 
 @keyframes flashrow {
@@ -713,8 +781,9 @@ a {
   font-size: 32px;
   font-weight: 900;
   font-variant-numeric: tabular-nums;
-  color: #14161a;
-  background: #fff;
+  color: #fff;
+  background: transparent;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85), 0 0 3px rgba(0, 0, 0, 0.9);
   border-radius: 4px;
 }
 
